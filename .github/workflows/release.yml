@@ -67,6 +67,8 @@ jobs:
       - run: |
           git config user.email "githubactions@planetpayment.com"
           git config user.name "${{ github.workflow }} workflow, on behalf of ${{ github.actor }}."
+      - name: Clone
+        run: git clone https://${{github.token}}@github.com/isacm/reusable-workflow.git
       - name: Prepare release
         run: |
           ./mvnw -B release:prepare -Dresume=${{inputs.resume}} -DsignTag=${{inputs.signTag}}  \
