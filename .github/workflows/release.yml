@@ -1,0 +1,81 @@
+name: MAS Java release with Maven
+on:
+  workflow_call:
+    inputs:
+      developmentVersion:
+        description: Next development version
+        type: string
+        required: true
+      releaseVersion:
+        description: Version to release
+        type: string
+        required: true
+      resume:
+        description: resume previous execution
+        type: boolean
+        required: false
+        default: false
+      signTag:
+        description: Should attempt to sign the tag
+        type: boolean
+        required: false
+        default: true
+      javaVersion:
+        default: '8'
+        required: false
+        type: string
+        description: Defines the java version that will be used on the workflow.
+      autoVersionSubmodules:
+        description: In a multi-module project enforces child versions equals to parent version
+        required: false
+        default: false
+        type: boolean
+      javaDistribution:
+        default: 'temurin'
+        required: false
+        type: string
+        description: Defines the java distribution that will be used on the workflow.
+      allowTimestampedSnapshots:
+        type: boolean
+        default: false
+        required: false
+        description: Allow releases with SNAPSHOT dependencies.
+      dryRun:
+        type: boolean
+        default: false
+        required: false
+        description: mvn release:prepare dry run
+      skipTests:
+        type: boolean
+        default: true
+        required: false
+        description: if maven should skip or not the tests execution
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{inputs.javaVersion}}
+          distribution: ${{inputs.javaDistribution}}
+          cache: maven
+      - run: |
+          git config user.email "githubactions@planetpayment.com"
+          git config user.name "'${{ github.workflow }}' workflow, on behalf of ${{ github.actor }}."
+      - name: Prepare release
+        run: |
+          mvn -B release:prepare -Dresume=${{inputs.resume}} -DsignTag=${{inputs.signTag}}  \
+          -DautoVersionSubmodules=${{inputs.autoVersionSubmodules}} \
+          -DdevelopmentVersion=${{inputs.developmentVersion}} -DreleaseVersion=${{inputs.releaseVersion}} \
+          -Dtag=${{github.event.repository.name}}-${{inputs.releaseVersion}} \
+          -DallowTimestampedSnapshots=${{inputs.allowTimestampedSnapshots}} -DdryRun=${{inputs.dryRun}} \
+          -Darguments="-DskipTests=${{inputs.skipTests}}"
+      - name: Perform release
+        run: mvn -B release:perform -DdryRun=${{inputs.dryRun}} -Darguments="-DskipTests=${{inputs.skipTests}}"
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
