@@ -76,7 +76,7 @@ jobs:
           git push
       - name: Prepare release
         run: |
-          ./mvnw -B release:prepare -Dresume=${{inputs.resume}} -DsignTag=${{inputs.signTag}}  \
+          mvn -B release:prepare -Dresume=${{inputs.resume}} -DsignTag=${{inputs.signTag}}  \
           -DautoVersionSubmodules=${{inputs.autoVersionSubmodules}} \
           -DdevelopmentVersion=${{inputs.developmentVersion}} -DreleaseVersion=${{inputs.releaseVersion}} \
           -Dtag=${{github.event.repository.name}}-${{inputs.releaseVersion}} \
@@ -86,3 +86,4 @@ jobs:
         run: ./mvnw -B release:perform -DdryRun=${{inputs.dryRun}} -Darguments="-DskipTests=${{inputs.skipTests}}"
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_ACTOR: git
