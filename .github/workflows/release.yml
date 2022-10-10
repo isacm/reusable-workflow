@@ -83,7 +83,7 @@ jobs:
           -DallowTimestampedSnapshots=${{inputs.allowTimestampedSnapshots}} -DdryRun=${{inputs.dryRun}} \
           -Darguments="-DskipTests=${{inputs.skipTests}}"
       - name: Perform release
-        run: ./mvnw -B release:perform -DdryRun=${{inputs.dryRun}} -Darguments="-DskipTests=${{inputs.skipTests}}"
+        run: mvn -B release:perform -DdryRun=${{inputs.dryRun}} -Darguments="-DskipTests=${{inputs.skipTests}}"
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           GITHUB_ACTOR: git
