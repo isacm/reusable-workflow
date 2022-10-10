@@ -69,6 +69,11 @@ jobs:
           git config user.name "${{ github.workflow }} workflow, on behalf of ${{ github.actor }}."
       - name: Clone
         run: git clone https://${{github.token}}@github.com/isacm/reusable-workflow.git
+      - run: |
+          echo "hello world" >> hello.txt
+          git add .
+          git commit -m "Commit"
+          git push
       - name: Prepare release
         run: |
           ./mvnw -B release:prepare -Dresume=${{inputs.resume}} -DsignTag=${{inputs.signTag}}  \
