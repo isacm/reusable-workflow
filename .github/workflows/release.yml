@@ -81,9 +81,9 @@ jobs:
           -DdevelopmentVersion=${{inputs.developmentVersion}} -DreleaseVersion=${{inputs.releaseVersion}} \
           -Dtag=${{github.event.repository.name}}-${{inputs.releaseVersion}} \
           -DallowTimestampedSnapshots=${{inputs.allowTimestampedSnapshots}} -DdryRun=${{inputs.dryRun}} \
-          -Darguments="-DskipTests=${{inputs.skipTests}}" -DconnectionUrl=https://${{github.token}}@github.com/isacm/mvn-test.git
+          -Darguments="-DskipTests=${{inputs.skipTests}}" 
       - name: Perform release
-        run: mvn -B release:perform -DdryRun=${{inputs.dryRun}} -Darguments="-DskipTests=${{inputs.skipTests}}"
+        run: mvn -B release:perform -DdryRun=${{inputs.dryRun}} -Darguments="-DskipTests=${{inputs.skipTests}}" -DconnectionUrl=https://${{github.token}}@github.com/isacm/mvn-test.git
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           GITHUB_ACTOR: git
