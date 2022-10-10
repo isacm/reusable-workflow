@@ -86,4 +86,3 @@ jobs:
         run: mvn -B release:perform -DdryRun=${{inputs.dryRun}} -Darguments="-DskipTests=${{inputs.skipTests}}" -DlocalCheckout=true
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          GITHUB_ACTOR: git
