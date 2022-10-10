@@ -69,13 +69,13 @@ jobs:
           git config user.name "${{ github.workflow }} workflow, on behalf of ${{ github.actor }}."
       - name: Prepare release
         run: |
-          mvn -B release:prepare -Dresume=${{inputs.resume}} -DsignTag=${{inputs.signTag}}  \
+          ./mvnw -B release:prepare -Dresume=${{inputs.resume}} -DsignTag=${{inputs.signTag}}  \
           -DautoVersionSubmodules=${{inputs.autoVersionSubmodules}} \
           -DdevelopmentVersion=${{inputs.developmentVersion}} -DreleaseVersion=${{inputs.releaseVersion}} \
           -Dtag=${{github.event.repository.name}}-${{inputs.releaseVersion}} \
           -DallowTimestampedSnapshots=${{inputs.allowTimestampedSnapshots}} -DdryRun=${{inputs.dryRun}} \
           -Darguments="-DskipTests=${{inputs.skipTests}}"
       - name: Perform release
-        run: mvn -B release:perform -DdryRun=${{inputs.dryRun}} -Darguments="-DskipTests=${{inputs.skipTests}}"
+        run: ./mvnw -B release:perform -DdryRun=${{inputs.dryRun}} -Darguments="-DskipTests=${{inputs.skipTests}}"
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
